@@ -1,5 +1,6 @@
 backend:
     path: ./
+    language: NodeJs
     publish: ""
     scripts:
         build: tsc
