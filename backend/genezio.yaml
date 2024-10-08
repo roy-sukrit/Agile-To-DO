@@ -1,9 +1,9 @@
-frontend:
+backend:
     path: ./
     publish: ""
     scripts:
         build: tsc
-        deploy: node dist/index.js
+        deploy: node dist/server.js
     subdomain: Agile-To-DO
 name: Agile-To-DO
 region: us-east-1
