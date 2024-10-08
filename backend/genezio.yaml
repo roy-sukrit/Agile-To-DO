@@ -1,5 +1,7 @@
-frontend:
+backeend:
     path: ./
+    language:
+        name: js
     publish: ./dist
     scripts:
         build: npm run build
