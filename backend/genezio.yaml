@@ -1,0 +1,10 @@
+frontend:
+    path: ./
+    publish: ""
+    scripts:
+        build: tsc
+        deploy: node dist/index.js
+    subdomain: Agile-To-DO
+name: Agile-To-DO
+region: us-east-1
+yamlVersion: 2
