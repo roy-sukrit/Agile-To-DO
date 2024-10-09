@@ -2,8 +2,12 @@ import express, { Express,Request, Response } from 'express';
 import { connectDB } from './db';
 import { Todo, ITodo } from './models/todo';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
 
 const app :Express= express();
+// Enable CORS
+app.use(cors());
 
 app.use(express.json()); 
 
