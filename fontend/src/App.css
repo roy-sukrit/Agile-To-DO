@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+}
+
+.container h1 {
+  font-family: "Honk", system-ui;
+  font-size: 50px;
+  font-color: gray;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.input-text {
+  height: 40px;
+  width: 80%;
+  text-align: left;
+  border-radius: 2px;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.add-button {
+  font-size: 25px;
+  margin-left: 30px;
+  width: 80px;
+  background-color: rgb(235, 217, 151);
+  border-radius: 10px;
+}
+
+.text {
+  font-family: "Sriracha", cursive;
+  font-size: 30PX;
+  color: rgb(85, 6, 19);
+}
+
+.complete-Button, .reset-Button, .update-Button, .delete-Button {
+  height: 30px;
+  margin-right:5px;
+  background-color: #e48440;
+  border-radius: 10px;
+  width: 70px;
+  text-align: center;
+  font-size: 14px;
+  text-align: center;
+}
+
