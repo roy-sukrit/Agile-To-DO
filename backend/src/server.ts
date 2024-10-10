@@ -8,6 +8,7 @@ import cors from 'cors';
 const app :Express= express();
 // Enable CORS
 app.use(cors());
+app.options('*', cors());
 
 app.use(express.json()); 
 
