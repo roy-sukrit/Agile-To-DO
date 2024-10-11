@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent any // This can also be a specific Docker agent if desired
     stages {
         stage('Build') {
             steps {
@@ -24,18 +24,21 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock' // Allows access to Docker socket if needed
+                }
+            }
             steps {
                 script {
-                    // Run SonarQube Scanner in Docker
-                    docker.image('sonarsource/sonar-scanner-cli').inside {
-                        sh """
-                        sonar-scanner \
-                        -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.projectKey=${PROJECT_KEY} \
-                        -Dsonar.sources=./backend
-                        """
-                    }
+                    sh """
+                    sonar-scanner \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.projectKey=${PROJECT_KEY} \
+                    -Dsonar.sources=./backend
+                    """
                 }
             }
         }
