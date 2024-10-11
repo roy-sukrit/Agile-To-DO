@@ -1,13 +1,16 @@
 pipeline {
     agent any
     stages {
-        stage('Build') 
+        stage('Build') {
             steps {
-                    dir('backend') {
+                dir('backend') {
                     // This will print "Hello Jenkins from Backend"
                     echo 'Hello Jenkins from the backend folder'
+                    // Add your build steps here, e.g., running npm install or npm build
+                }
             }
-        
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 script {
@@ -25,6 +28,7 @@ pipeline {
                 }
             }
         }
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
@@ -33,6 +37,4 @@ pipeline {
             }
         }
     }
-
-}
 }
