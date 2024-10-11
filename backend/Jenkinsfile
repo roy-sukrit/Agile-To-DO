@@ -4,7 +4,6 @@ pipeline {
         stage('Build') {
             steps {
                 dir('backend') {
-                    // This will print "Hello Jenkins from Backend"
                     echo 'Hello Jenkins from the backend folder'
                     // Add your build steps here, e.g., running npm install or npm build
                 }
@@ -16,10 +15,9 @@ pipeline {
                 script {
                     // Fetch the SonarQube token from credentials
                     env.SONAR_TOKEN = credentials('SONAR') // Replace with your credentials ID for the token
-                    env.PROJECT_KEY = credentials('PROJECT_KEY') // Replace with your actual project key
+                    env.PROJECT_KEY = 'Test-Project' // Set your actual project key here
 
-                    // Echo the SonarQube token and project key for debugging
-                    echo "SonarQube Token: ${env.SONAR_TOKEN}"
+                    // Echo the SonarQube token and project key for debugging (mask token in production)
                     echo "SonarQube Project Key: ${env.PROJECT_KEY}"
                 }
             }
@@ -27,19 +25,17 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                
                 script {
                     // This assumes you have set up a SonarQube server in Jenkins
                     def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
                     withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
-                             
-                            sh """
-                             ${scannerHome}/bin/sonar-scanner \
+                        sh '''
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.host.url=http://<your-sonarqube-host>:9000 \
                             -Dsonar.login=${SONAR_TOKEN} \
                             -Dsonar.projectKey=${PROJECT_KEY} \
                             -Dsonar.sources=./backend
-                             """
-
+                        '''
                     }
                 }
             }
