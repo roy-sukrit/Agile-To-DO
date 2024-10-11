@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello Jenkins') {
+            steps {
+                script {
+                    // This will print "Hello Jenkins" in the console output
+                    echo 'Hello Jenkins'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // This will ensure that the job always gets notified when finished
+            echo 'Pipeline finished.'
+        }
+    }
+}
