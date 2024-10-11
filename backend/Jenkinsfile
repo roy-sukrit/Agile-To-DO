@@ -11,19 +11,28 @@ pipeline {
             }
         }
 
+        stage('Setup') {
+            steps {
+                script {
+                    // Fetch the SonarQube token from credentials
+                    env.SONAR_TOKEN = credentials('SONAR') // Replace with your credentials ID for the token
+                    env.PROJECT_KEY = credentials('PROJECT_KEY') // Replace with your actual project key
+
+                    // Echo the SonarQube token and project key for debugging
+                    echo "SonarQube Token: ${env.SONAR_TOKEN}"
+                    echo "SonarQube Project Key: ${env.PROJECT_KEY}"
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
+                
                 script {
                     // This assumes you have set up a SonarQube server in Jenkins
                     def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
                     withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
-                        // Use the secret token for authentication
-                        env.SONAR_TOKEN = credentials('SONAR') // Use the ID you provided
-                        env.PROJECT_KEY = credentials('PROJECT_KEY')          
-                        echo "SonarQube Token: ${env.SONAR_TOKEN}"
-                        echo "Using Token for SonarQube"   
-                        echo "SonarQube Project Key: ${env.PROJECT_KEY}"
-                        echo "Using Project Key for SonarQube"      
+                             
                             sh """
                              ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.login=${SONAR_TOKEN} \
