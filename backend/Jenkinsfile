@@ -31,7 +31,7 @@ pipeline {
                     withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
                         sh '''
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.host.url=http://<your-sonarqube-host>:9000 \
+                            -Dsonar.host.url=http://localhost:9000 \
                             -Dsonar.login=${SONAR_TOKEN} \
                             -Dsonar.projectKey=${PROJECT_KEY} \
                             -Dsonar.sources=./backend
