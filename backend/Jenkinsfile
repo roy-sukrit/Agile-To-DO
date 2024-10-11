@@ -23,7 +23,7 @@ pipeline {
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.projectKey=YourProjectKey \  // Replace with your project key
+                        -Dsonar.projectKey=Test-Project \ 
                         -Dsonar.sources=./backend
                         """
 
