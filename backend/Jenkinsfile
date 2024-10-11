@@ -28,6 +28,9 @@ pipeline {
                 script {
                     // This assumes you have set up a SonarQube server in Jenkins
                     def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
+                    // Debugging step to check the scanner path
+                    echo "SonarQube Scanner Home: ${scannerHome}"
+                    echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
                     withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
                         sh '''
                             ${scannerHome}/bin/sonar-scanner \
