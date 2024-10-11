@@ -17,7 +17,7 @@ pipeline {
                     env.SONAR_TOKEN = credentials('SONAR') // Replace with your credentials ID for the token
                     env.PROJECT_KEY = 'Test-Project' // Set your actual project key here
 
-                    // Echo the SonarQube token and project key for debugging (mask token in production)
+                    // Echo the SonarQube project key for debugging (mask token in production)
                     echo "SonarQube Project Key: ${env.PROJECT_KEY}"
                 }
             }
@@ -26,14 +26,10 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // This assumes you have set up a SonarQube server in Jenkins
-                    def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
-                    // Debugging step to check the scanner path
-                    echo "SonarQube Scanner Home: ${scannerHome}"
-                    echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
-                    withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
+                    // Run SonarQube Scanner in Docker
+                    docker.image('sonarsource/sonar-scanner-cli').inside {
                         sh """
-                        ${scannerHome}/bin/sonar-scanner \
+                        sonar-scanner \
                         -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.projectKey=${PROJECT_KEY} \
