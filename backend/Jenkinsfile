@@ -20,12 +20,13 @@ pipeline {
                         // Use the secret token for authentication
                         env.SONAR_TOKEN = credentials('SONAR') // Use the ID you provided
 
-                        sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.projectKey=Test-Project \
-                        -Dsonar.sources=./backend
-                        """
+                           sh """
+                                #!/bin/bash
+                                ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.login=${SONAR_TOKEN} \
+                                -Dsonar.projectKey=${PROJECT_KEY} \
+                                -Dsonar.sources=./backend
+                            """
 
                     }
                 }
