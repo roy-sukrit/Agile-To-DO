@@ -7,7 +7,7 @@ pipeline {
                     // This will print "Hello Jenkins from Backend"
                     echo 'Hello Jenkins from the backend folder'
             }
-        }
+        
         stage('SonarQube Analysis') {
             steps {
                 script {
