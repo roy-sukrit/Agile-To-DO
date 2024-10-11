@@ -1,23 +1,37 @@
 pipeline {
     agent any
-
     stages {
-        stage('Hello Jenkins from Backend') {
+        stage('Build') 
             steps {
-                // Change working directory to 'backend'
-                dir('backend') {
+                    dir('backend') {
                     // This will print "Hello Jenkins from Backend"
                     echo 'Hello Jenkins from the backend folder'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // This assumes you have set up a SonarQube server in Jenkins
+                    def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
+                    withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
+                        // Use the secret token for authentication
+                        env.SONAR_TOKEN = credentials('SONAR') // Use the ID you provided
 
-                  
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.login=${SONAR_TOKEN}
+                        """
+                    }
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
     }
 
-    post {
-        always {
-            echo 'Pipeline finished.'
-        }
-    }
 }
