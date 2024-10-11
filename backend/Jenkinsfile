@@ -19,14 +19,17 @@ pipeline {
                     withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
                         // Use the secret token for authentication
                         env.SONAR_TOKEN = credentials('SONAR') // Use the ID you provided
-
-                           sh """
-                                #!/bin/bash
-                                ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.login=${SONAR_TOKEN} \
-                                -Dsonar.projectKey=${PROJECT_KEY} \
-                                -Dsonar.sources=./backend
-                            """
+                        env.PROJECT_KEY = credentials('PROJECT_KEY')          
+                        echo "SonarQube Token: ${env.SONAR_TOKEN}"
+                        echo "Using Token for SonarQube"   
+                        echo "SonarQube Project Key: ${env.PROJECT_KEY}"
+                        echo "Using Project Key for SonarQube"      
+                            sh """
+                             ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.projectKey=${PROJECT_KEY} \
+                            -Dsonar.sources=./backend
+                             """
 
                     }
                 }
