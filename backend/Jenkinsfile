@@ -2,9 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello Jenkins') {
+        stage('Hello Jenkins from Backend') {
             steps {
-                echo 'Hello Jenkins'
+                // Change working directory to 'backend'
+                dir('backend') {
+                    // This will print "Hello Jenkins from Backend"
+                    echo 'Hello Jenkins from the backend folder'
+
+                  
+                }
             }
         }
     }
