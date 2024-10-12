@@ -27,15 +27,13 @@ pipeline {
                 script {
                     // Use the absolute path to the sonar-scanner
                     def sonarScannerPath = '/var/jenkins_home/sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner'
-                    
-                    // Ensure you are executing the sonar-scanner
-                    sh """
-                    ${sonarScannerPath} \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=${SONAR_TOKEN} \
-                    -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=./backend
-                    """
+
+                    // Ensure you are executing the sonar-scanner using bash
+                    sh '''
+                    #!/bin/bash
+                    set -e # Exit immediately if a command exits with a non-zero status
+                    ${sonarScannerPath} -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${SONAR_TOKEN} -Dsonar.projectKey=${PROJECT_KEY} -Dsonar.sources=./backend
+                    '''
                 }
             }
         }
