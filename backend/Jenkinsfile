@@ -1,5 +1,5 @@
 pipeline {
-    agent any // This can also be a specific Docker agent if desired
+    agent any
     stages {
         stage('Build') {
             steps {
@@ -17,28 +17,29 @@ pipeline {
                     env.SONAR_TOKEN = credentials('SONAR') // Replace with your credentials ID for the token
                     env.PROJECT_KEY = 'Test-Project' // Set your actual project key here
 
-                    // Echo the SonarQube project key for debugging (mask token in production)
+                    // Echo the SonarQube token and project key for debugging (mask token in production)
                     echo "SonarQube Project Key: ${env.PROJECT_KEY}"
                 }
             }
         }
 
         stage('SonarQube Analysis') {
-            agent {
-                docker {
-                    image 'sonarsource/sonar-scanner-cli'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock' // Allows access to Docker socket if needed
-                }
-            }
             steps {
                 script {
-                    sh """
-                    sonar-scanner \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=${SONAR_TOKEN} \
-                    -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=./backend
-                    """
+                    // This assumes you have set up a SonarQube server in Jenkins
+                    def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
+                    // Debugging step to check the scanner path
+                    echo "SonarQube Scanner Home: ${scannerHome}"
+                    echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
+                    withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.host.url=109.76.31.207:9000 \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.projectKey=${PROJECT_KEY} \
+                        -Dsonar.sources=./backend
+                        """
+                    }
                 }
             }
         }
