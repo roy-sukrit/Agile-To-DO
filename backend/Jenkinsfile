@@ -25,20 +25,16 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // This assumes you have set up a SonarQube server in Jenkins
-                    def scannerHome = tool 'SonarQube Scanner' // Ensure this matches the tool setup in Jenkins
-                    echo "SonarQube Scanner Home: ${scannerHome}"
-                    echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
+                    echo "Running SonarQube Scanner using Docker"
 
-                    withSonarQubeEnv('Backend') { // Ensure 'Backend' matches the SonarQube server setup in Jenkins
+                    // Use the Docker Pipeline syntax to run the SonarQube scanner inside a container
+                    docker.image('sonarsource/sonar-scanner-cli').inside {
                         sh '''
-                        docker run --rm \
-                        -e SONAR_HOST_URL=http://localhost:9000 \
-                        -e SONAR_LOGIN=${SONAR_TOKEN} \
-                        -v $PWD:/usr/src \
-                        sonarsource/sonar-scanner-cli \
+                        sonar-scanner \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.projectKey=${PROJECT_KEY} \
-                        -Dsonar.sources=/usr/src/backend
+                        -Dsonar.sources=./backend
                         '''
                     }
                 }
