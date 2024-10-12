@@ -1,14 +1,56 @@
 pipeline {
     agent any
     stages {
-        stage('Verify Docker Access') {
+        stage('Build') {
             steps {
-                script {
-                    sh 'docker --version'
+                dir('backend') {
+                    echo 'Hello Jenkins from the backend folder'
+                    // Add your build steps here, e.g., running npm install or npm build
                 }
             }
         }
 
-        // Rest of the stages remain the same...
+        stage('Setup') {
+            steps {
+                script {
+                    // Fetch the SonarQube token from Jenkins credentials
+                    env.SONAR_TOKEN = credentials('SONAR') // Ensure 'SONAR' is the correct ID for the token
+                    env.PROJECT_KEY = 'Test-Project' // Replace with the actual project key
+
+                    echo "SonarQube Project Key: ${env.PROJECT_KEY}"
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // This assumes you have set up a SonarQube server in Jenkins
+                    def scannerHome = tool 'SonarQube Scanner' // Ensure this matches the tool setup in Jenkins
+                    echo "SonarQube Scanner Home: ${scannerHome}"
+                    echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
+
+                    withSonarQubeEnv('Backend') { // Ensure 'Backend' matches the SonarQube server setup in Jenkins
+                        sh '''
+                        docker run --rm \
+                        -e SONAR_HOST_URL=http://localhost:9000 \
+                        -e SONAR_LOGIN=${SONAR_TOKEN} \
+                        -v $PWD:/usr/src \
+                        sonarsource/sonar-scanner-cli \
+                        -Dsonar.projectKey=${PROJECT_KEY} \
+                        -Dsonar.sources=/usr/src/backend
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 }
