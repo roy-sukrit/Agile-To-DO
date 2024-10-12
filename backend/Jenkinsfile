@@ -13,11 +13,10 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    // Fetch the SonarQube token from credentials
-                    env.SONAR_TOKEN = credentials('SONAR') // Replace with your credentials ID for the token
-                    env.PROJECT_KEY = 'Test-Project' // Set your actual project key here
+                    // Fetch the SonarQube token from Jenkins credentials
+                    env.SONAR_TOKEN = credentials('SONAR') // Ensure 'SONAR' is the correct ID for the token
+                    env.PROJECT_KEY = 'Test-Project' // Replace with the actual project key
 
-                    // Echo the SonarQube token and project key for debugging (mask token in production)
                     echo "SonarQube Project Key: ${env.PROJECT_KEY}"
                 }
             }
@@ -27,18 +26,19 @@ pipeline {
             steps {
                 script {
                     // This assumes you have set up a SonarQube server in Jenkins
-                    def scannerHome = tool 'SonarQube Scanner' // The name of the SonarQube scanner tool
-                    // Debugging step to check the scanner path
+                    def scannerHome = tool 'SonarQube Scanner' // Ensure this matches the tool setup in Jenkins
                     echo "SonarQube Scanner Home: ${scannerHome}"
                     echo "SonarQube Scanner Path: ${scannerHome}/bin/sonar-scanner"
-                    withSonarQubeEnv('Backend') { // The name you used for the SonarQube server
-                        sh """
+
+                    withSonarQubeEnv('Backend') { // Ensure 'Backend' matches the SonarQube server setup in Jenkins
+                        sh '''
+                        #!/bin/bash
                         ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.host.url=109.76.31.207:9000 \
+                        -Dsonar.host.url=http://109.76.31.207:9000 \
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.projectKey=${PROJECT_KEY} \
                         -Dsonar.sources=./backend
-                        """
+                        '''
                     }
                 }
             }
