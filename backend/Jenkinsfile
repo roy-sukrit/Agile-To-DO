@@ -34,7 +34,7 @@ pipeline {
                         sh '''
                         #!/bin/bash
                         ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.host.url=http://109.76.31.207:9000 \
+                        -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.projectKey=${PROJECT_KEY} \
                         -Dsonar.sources=./backend
