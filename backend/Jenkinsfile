@@ -32,7 +32,13 @@ pipeline {
                     sh '''
                     #!/bin/bash
                     set -e # Exit immediately if a command exits with a non-zero status
-                    ${sonarScannerPath} -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${SONAR_TOKEN} -Dsonar.projectKey=${PROJECT_KEY} -Dsonar.sources=./backend
+                    
+                    # Run sonar-scanner with the required parameters
+                    ${sonarScannerPath} \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.projectKey=${PROJECT_KEY} \
+                        -Dsonar.sources=./backend
                     '''
                 }
             }
