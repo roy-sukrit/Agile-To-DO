@@ -32,12 +32,13 @@ pipeline {
 
                     withSonarQubeEnv('Backend') { // Ensure 'Backend' matches the SonarQube server setup in Jenkins
                         sh '''
-                        #!/bin/bash
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=${SONAR_TOKEN} \
+                        docker run --rm \
+                        -e SONAR_HOST_URL=http://localhost:9000 \
+                        -e SONAR_LOGIN=${SONAR_TOKEN} \
+                        -v $PWD:/usr/src \
+                        sonarsource/sonar-scanner-cli \
                         -Dsonar.projectKey=${PROJECT_KEY} \
-                        -Dsonar.sources=./backend
+                        -Dsonar.sources=/usr/src/backend
                         '''
                     }
                 }
